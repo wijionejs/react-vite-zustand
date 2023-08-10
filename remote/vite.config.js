@@ -1,6 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import federation from '@originjs/vite-plugin-federation'
+import { join } from "path";
+
+const jsxRuntimePath = join(__dirname, "node_modules", "react", "jsx-runtime.js");
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -10,9 +13,15 @@ export default defineConfig({
       name: "remote_app",
       filename: "remoteEntry.js",
       exposes: {
-        './Button': './src/components/Button'
+        './Counter': './src/components/Counter'
       },
-      shared: ['react','react-dom']
+      shared: {
+        react: {},
+        "react/jsx-runtime": {
+          packagePath: jsxRuntimePath,
+        },
+        "react-dom": {},
+      },
     })
   ],
   build: {
